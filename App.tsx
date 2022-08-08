@@ -9,10 +9,9 @@ export class LocationType {
   district: string;
 }
 
+const questionMarkLocation = "???";
+
 export default function App() {
-  console.log(`render cnt: ${renderCnt}`);
-  renderCnt++;
-  const questionMarkLocation = "???";
   const [locationPermission, setLocationPermission] = useState<boolean>(false);
   const [userLocation, setUserLocation] = useState<LocationType>({
     city: questionMarkLocation,
@@ -23,7 +22,6 @@ export default function App() {
     setLocationPermission(granted);
   };
   const getUserLocation = async (locationPermission: boolean) => {
-    console.log(`locationPermission: ${locationPermission}`);
     if (locationPermission) {
       const {
         coords: { longitude, latitude },
@@ -46,7 +44,6 @@ export default function App() {
   // * ===== useEffect ===== * //
   // 권한 요청 => useEffect의 2번째 파라미터를 빈 배열로 하면 처음 렌더링 될 때 사용된다
   useEffect(() => {
-    console.log(`call ask`);
     (async () => {
       await ask();
       await getUserLocation(locationPermission);
@@ -54,7 +51,6 @@ export default function App() {
   }, []);
   // 유저 위치값 가져오기(locationPermission 이 true 될 때)
   useEffect(() => {
-    console.log(`call getUserLocation`);
     (async () => {
       await getUserLocation(locationPermission);
     })();
