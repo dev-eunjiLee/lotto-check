@@ -4,15 +4,20 @@ import { useEffect, useState } from "react";
 
 let renderCnt = 0;
 
+export class LocationType {
+  city: string;
+  district: string;
+}
+
 export default function App() {
   console.log(`render cnt: ${renderCnt}`);
   renderCnt++;
   const questionMarkLocation = "???";
   const [locationPermission, setLocationPermission] = useState<boolean>(false);
-  const [userLocation, setUserLocation] = useState<{
-    city: string;
-    district: string;
-  }>({ city: questionMarkLocation, district: questionMarkLocation });
+  const [userLocation, setUserLocation] = useState<LocationType>({
+    city: questionMarkLocation,
+    district: questionMarkLocation,
+  });
   const ask = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
     setLocationPermission(granted);
