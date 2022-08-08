@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import * as Location from "expo-location";
 import { useEffect, useState } from "react";
 
@@ -9,14 +9,9 @@ export class LocationType {
   district: string;
 }
 
-const questionMarkLocation = "???";
-
 export default function App() {
   const [locationPermission, setLocationPermission] = useState<boolean>(false);
-  const [userLocation, setUserLocation] = useState<LocationType>({
-    city: questionMarkLocation,
-    district: questionMarkLocation,
-  });
+  const [userLocation, setUserLocation] = useState<LocationType>();
   const ask = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
     setLocationPermission(granted);
@@ -30,15 +25,12 @@ export default function App() {
         longitude,
         latitude,
       });
-      setUserLocation({
-        city: city || questionMarkLocation,
-        district: district || questionMarkLocation,
-      });
-    } else {
-      setUserLocation({
-        city: questionMarkLocation,
-        district: questionMarkLocation,
-      });
+      if (city && district) {
+        setUserLocation({
+          city,
+          district,
+        });
+      }
     }
   };
   // * ===== useEffect ===== * //
@@ -62,13 +54,16 @@ export default function App() {
       <View style={styles_layout.header}>
         <Text style={styles_text.header_title}>오늘의 로또</Text>
       </View>
-
       <View style={styles_layout.body}>
-        <View style={styles_layout.body_userLocation}>
-          <Text style={styles_text.body_userLocation}>
-            {`${userLocation.city} - ${userLocation.district}`}
-          </Text>
-        </View>
+        {userLocation === undefined ? (
+          <ActivityIndicator></ActivityIndicator>
+        ) : (
+          <View style={styles_layout.body_userLocation}>
+            <Text style={styles_text.body_userLocation}>
+              {`${userLocation.city} - ${userLocation.district}`}
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );
